@@ -1,0 +1,110 @@
+/* Importar los estilos base de la librería */
+@import "react-datepicker/dist/react-datepicker.css";
+
+/* --- CONTENEDOR DEL POPUP --- */
+.react-datepicker {
+  font-family: inherit;
+  border-radius: 1rem !important; /* rounded-2xl */
+  border: 1px solid #e2e8f0 !important; /* slate-200 */
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+  background-color: #ffffff !important;
+  padding: 0.5rem !important;
+  overflow: hidden;
+}
+
+/* Ocultar el triángulo apuntador */
+.react-datepicker__triangle {
+  display: none !important;
+}
+
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
+/* --- CABECERA Y NAVEGACIÓN (FLECHAS) --- */
+.react-datepicker__header {
+  background-color: #ffffff !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  padding-top: 0.75rem !important;
+  position: relative !important;
+}
+
+/* Ajuste de posición vertical de las flechas */
+.react-datepicker__navigation {
+  top: 12px !important; /* Baja las flechas para centrarlas con el texto del mes */
+}
+
+.react-datepicker__navigation--previous {
+  left: 10px !important;
+}
+
+.react-datepicker__navigation--next {
+  right: 10px !important;
+}
+
+.react-datepicker__current-month {
+  color: #0f172a !important; /* slate-900 */
+  font-weight: 600 !important;
+  font-size: 0.95rem !important;
+  text-transform: capitalize;
+  margin-bottom: 0.5rem !important;
+}
+
+.react-datepicker__day-name {
+  color: #94a3b8 !important; /* slate-400 */
+  font-weight: 600 !important;
+  width: 2.25rem !important;
+  margin: 0.2rem !important;
+}
+
+/* --- DÍAS DE LA GRILLA --- */
+.react-datepicker__day {
+  width: 2.25rem !important;
+  height: 2.25rem !important;
+  line-height: 2.25rem !important;
+  border-radius: 0.5rem !important; /* rounded-lg */
+  color: #334155 !important; /* slate-700 */
+  font-weight: 500 !important;
+  margin: 0.2rem !important;
+  transition: all 0.15s ease !important;
+}
+
+/* Hover de días normales */
+.react-datepicker__day:hover {
+  background-color: #f1f5f9 !important; /* slate-100 */
+  color: #0f172a !important;
+}
+
+/* --- CORRECCIÓN DEL BUG: DÍA UNICO SELECCIONADO --- */
+
+/* Reseteo del estilo de selección automática por teclado */
+.react-datepicker__day--keyboard-selected {
+  background-color: transparent !important;
+  color: #334155 !important;
+}
+
+/* Estilo estricto SOLO para el día de la fecha seleccionada en el mes activo */
+.react-datepicker__day.react-datepicker__day--selected {
+  background-color: #2563eb !important; /* blue-600 */
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+/* Días fuera del mes actual (no seleccionables / opacos) */
+.react-datepicker__day--outside-month {
+  color: #cbd5e1 !important;
+  pointer-events: none;
+}
+
+/* Días Pasados / Deshabilitados */
+.react-datepicker__day--disabled {
+  color: #cbd5e1 !important; /* slate-300 */
+  cursor: not-allowed !important;
+  opacity: 0.4;
+}
+
+.react-datepicker__day--disabled:hover {
+  background-color: transparent !important;
+}

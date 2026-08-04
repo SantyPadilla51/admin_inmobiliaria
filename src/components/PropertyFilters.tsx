@@ -107,7 +107,7 @@ const PropertyFilters = () => {
           <SelectTrigger className="bg-slate-50 h-10 border border-slate-100 cursor-pointer rounded-xl text-slate-700 hover:bg-slate-100/70 focus:ring-0 focus:ring-offset-0 transition-colors text-sm font-medium shadow-none">
             <SelectValue placeholder="Seleccioná un barrio" />
           </SelectTrigger>
-          <SelectContent className="rounded-xl border border-slate-200 shadow-lg">
+          <SelectContent className="rounded-xl border border-slate-200 shadow-lg ">
             <SelectGroup>
               <SelectLabel className="text-xs text-slate-400 font-normal px-2 py-1.5">
                 Barrios más buscados
@@ -195,6 +195,12 @@ const PropertyFilters = () => {
                 value="nuñez"
               >
                 Nuñez
+              </SelectItem>
+              <SelectItem
+                className="rounded-lg cursor-pointer text-sm"
+                value="palermo"
+              >
+                Palermo
               </SelectItem>
               <SelectItem
                 className="rounded-lg cursor-pointer text-sm"

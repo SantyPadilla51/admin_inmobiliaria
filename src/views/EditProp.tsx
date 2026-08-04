@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
+import { Textarea } from "../components/ui/textarea";
+import { Checkbox } from "../components/ui/checkbox";
+import { useNavigate } from "react-router-dom";
+import { cleanNumericValue, formatCurrencyAR } from "../helpers/formatCurrency";
+import { ejecutarActualizacionPropiedad } from "@/services/props/updateProp";
+import { ejecutarEliminacionPropiedad } from "@/services/props/deleteProp";
+import { Edit3, Trash2 } from "lucide-react";
+import type { EditPropProps, Propiedad } from "../interfaces/Propiedad";
 import {
   Field,
   FieldGroup,
@@ -8,8 +16,6 @@ import {
   FieldLegend,
   FieldSet,
 } from "../components/ui/field";
-import { Edit3, Trash2 } from "lucide-react";
-import type { EditPropProps, Propiedad } from "../interfaces/Propiedad";
 import {
   Select,
   SelectContent,
@@ -26,11 +32,6 @@ import {
   OPERACION,
   TIPO_LIST,
 } from "../constants/propiedades";
-import { Textarea } from "../components/ui/textarea";
-import toast from "react-hot-toast";
-import { Checkbox } from "../components/ui/checkbox";
-import { useNavigate } from "react-router-dom";
-import { cleanNumericValue, formatCurrencyAR } from "../helpers/formatCurrency";
 
 const EditProp = ({ prop }: EditPropProps) => {
   const [formData, setFormData] = useState<Propiedad>({ ...prop });
@@ -39,7 +40,7 @@ const EditProp = ({ prop }: EditPropProps) => {
   const [deleting, setDeleting] = useState(false);
   const [toastDeleteProp, setToastDeleteProp] = useState(false);
 
-  const handleChange = (e: any) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
 
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -56,50 +57,14 @@ const EditProp = ({ prop }: EditPropProps) => {
     });
   };
 
-  const actualizarPropiedad = async (e: React.FormEvent) => {
+  const actualizarPropiedad = (e: React.FormEvent) => {
     e.preventDefault();
 
-    setLoading(true);
-    const imagenesProcesadas = await Promise.all(
-      formData.imagenes.map(async (img) => {
-        if (img.startsWith("blob:")) {
-          return await blobToBase64(img);
-        }
-        return img;
-      }),
-    );
-
-    const url = `https://backend-inmobiliaria-argenta.vercel.app/propiedades/${formData.id}`;
-
-    try {
-      const request = await fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...formData,
-          imagenes: imagenesProcesadas,
-        }),
-      });
-
-      const result = await request.json();
-
-      if (request.ok === true) {
-        toast.success(result.msg, {
-          position: "top-right",
-        });
-        setTimeout(() => {
-          window.location.href = "/admin/dashboard";
-        }, 1500);
-      } else {
-        toast.success(result.msg, {
-          position: "top-right",
-        });
-      }
-    } catch (error) {
-      console.error("Error de red o servidor caído:", error);
-    }
+    ejecutarActualizacionPropiedad({
+      formData,
+      setLoading,
+      blobToBase64Fn: blobToBase64,
+    });
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -123,33 +88,8 @@ const EditProp = ({ prop }: EditPropProps) => {
     }));
   };
 
-  const deleteProp = async () => {
-    setDeleting(true);
-    const url = `https://backend-inmobiliaria-argenta.vercel.app/propiedades/${formData.id}`;
-
-    try {
-      const request = await fetch(url, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const result = await request.json();
-
-      if (result.ok === true) {
-        toast.success(result.msg, {
-          position: "top-right",
-        });
-        setTimeout(() => {
-          window.location.href = "/admin/dashboard";
-        }, 1500);
-      } else {
-        console.error("Error en la respuesta:", result.msg);
-      }
-    } catch (error) {
-      console.error("Error de red o servidor caído:", error);
-    }
+  const deleteProp = () => {
+    ejecutarEliminacionPropiedad({ id: formData.id, setDeleting });
   };
 
   return (

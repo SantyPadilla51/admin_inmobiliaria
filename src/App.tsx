@@ -5,6 +5,10 @@ import Register from "./views/auth/Register";
 import AddProp from "./views/AddProp";
 import EditPropPage from "./views/EditPropPage";
 import ConfirmEmail from "./views/auth/ConfirmEmail";
+import ConsultasLeads from "./views/LeadsConsultas";
+import Agenda from "./views/Agenda";
+import Clientes from "./views/Clientes";
+import Contratos from "./views/Contratos";
 
 function App() {
   return (
@@ -14,7 +18,11 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/auth/register" element={<Register />} />
 
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/propiedades" element={<AdminDashboard />} />
+          <Route path="/admin/consultas" element={<ConsultasLeads />} />
+          <Route path="/admin/agenda" element={<Agenda />} />
+          <Route path="/admin/clientes" element={<Clientes />} />
+          <Route path="/admin/contratos" element={<Contratos />} />
           <Route path="/admin/add-prop" element={<AddProp />} />
           <Route
             path="/admin/editar-propiedad/:id"

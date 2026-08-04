@@ -1,24 +1,17 @@
-import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 import EditProp from "./EditProp";
-import type { Propiedad } from "../interfaces/Propiedad";
 import Navbar from "../components/Navbar";
+import { getProp } from "@/services/props/getProp";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 
 const EditPropPage = () => {
   const { id } = useParams();
-  const [propiedad, setPropiedad] = useState<Propiedad | null>(null);
 
-  useEffect(() => {
-    const fetchPropiedad = async () => {
-      const request = await fetch(
-        `https://backend-inmobiliaria-argenta.vercel.app/propiedades/${id}`,
-      );
-      const data = await request.json();
-      setPropiedad(data.data);
-    };
+  const { data: propiedad } = useQuery({
+    queryKey: ["admin_propiedad"],
 
-    fetchPropiedad();
-  }, []);
+    queryFn: () => getProp(id!),
+  });
 
   if (!propiedad) {
     return (

@@ -1,48 +1,50 @@
 import { Card, CardContent, CardFooter } from "../components/ui/card";
 import { Edit3, MapPin } from "lucide-react";
 import { PropiedadFoto } from "../helpers/propiedadFoto";
-import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import type { Propiedad } from "../interfaces/Propiedad";
-import { getPropiedades } from "../actions/getProps";
 import type { CustomCardProps } from "../interfaces/CustomProps";
+import { useQuery } from "@tanstack/react-query";
+import { getPropiedades } from "@/services/props/getProps";
+import { ScaleLoader } from "react-spinners";
 
 const GridProp = ({ barrio, tipo, operacion }: CustomCardProps) => {
-  const [propiedades, setPropiedades] = useState<Propiedad[]>([]);
-  const [cargando, setCargando] = useState<boolean>(true);
   const [searchParams] = useSearchParams();
   const tipoUrl = searchParams.get("tipo") || tipo;
   const barrioUrl = searchParams.get("barrio") || barrio;
   const operacionUrl = searchParams.get("operacion") || operacion;
 
-  useEffect(() => {
-    const cargarDatos = async () => {
-      setCargando(true);
+  const { data: propiedades = [], isLoading: cargando } = useQuery({
+    queryKey: [
+      "admin_propiedades",
+      { barrio: barrioUrl, tipo: tipoUrl, operacion: operacionUrl },
+    ],
 
-      try {
-        const data = await getPropiedades({
-          barrio: barrioUrl,
-          tipo: tipoUrl,
-          operacion: operacionUrl,
-        });
-
-        setPropiedades(data);
-      } catch (error) {
-        console.error("Error al cargar propiedades:", error);
-      } finally {
-        setCargando(false);
-      }
-    };
-    cargarDatos();
-  }, [searchParams]);
+    queryFn: () =>
+      getPropiedades({
+        barrio: barrioUrl,
+        tipo: tipoUrl,
+        operacion: operacionUrl,
+      }),
+  });
 
   if (cargando) {
     return (
-      <div className="flex h-screen overflow-hidden bg-black font-sans">
-        <main className="flex-1 flex items-center justify-center bg-white">
+      <div className="flex mt-10 items-center justify-center font-sans">
+        <div className="flex flex-col items-center text-center gap-3">
+          <ScaleLoader />
+          <p className="text-black font-medium">Cargando propiedades...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (propiedades.length == 0) {
+    return (
+      <div className="flex mt-10 overflow-hidden font-sans">
+        <main className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <p className="text-black animate-pulse">
-              Cargando datos de la propiedad...
+            <p className="text-black font-medium ">
+              No se encontraron propiedades
             </p>
           </div>
         </main>
@@ -50,24 +52,12 @@ const GridProp = ({ barrio, tipo, operacion }: CustomCardProps) => {
     );
   }
 
-  if (propiedades.length == 0) {
-    return (
-      <div className="flex h-screen overflow-hidden bg-black font-sans">
-        <main className="flex-1 flex items-center justify-center bg-white">
-          <div className="text-center">
-            <p className="text-black ">No se encontraron propiedades</p>
-          </div>
-        </main>
-      </div>
-    );
-  }
-
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-6">
       {propiedades.map((prop) => (
         <Card
           key={prop.id}
-          className="overflow-hidden bg-white rounded-2xl border border-slate-200/70 flex flex-col h-full shadow-sm hover:shadow-md hover:border-slate-300/80 transition-all duration-300 group"
+          className="overflow-hidden w-72 mx-auto bg-white rounded-2xl border border-slate-200/70 flex flex-col h-full shadow-sm hover:shadow-md hover:border-slate-300/80 transition-all duration-300 group"
         >
           <div className="relative mt-3 mx-3 aspect-4/3 overflow-hidden rounded-xl bg-slate-100 shrink-0">
             {prop.imagenes && prop.imagenes.length > 0 ? (
@@ -122,7 +112,7 @@ const GridProp = ({ barrio, tipo, operacion }: CustomCardProps) => {
               <div className="flex flex-col items-center gap-1 text-center border-r border-slate-200/60 last:border-0">
                 <span className="text-slate-400 font-normal">Hab.</span>
                 <span className="text-slate-800 flex items-center gap-1">
-                  {prop.habitaciones || 0}
+                  {prop.habitaciones}
                 </span>
               </div>
 
