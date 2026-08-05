@@ -20,6 +20,7 @@ const Register = () => {
     e.preventDefault();
 
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{6,}$/;
+    const { ...cleanData } = form;
 
     if (!passwordRegex.test(form.password)) {
       setLoading(false);
@@ -32,9 +33,7 @@ const Register = () => {
           <div className="flex-1 w-0 p-4">
             <div className="flex items-start">
               <div className="ml-3 flex-1">
-                <p className="text-sm font-medium text-black">
-                  La contraseña debe contener:
-                </p>
+                <p className="text-sm font-medium text-black">La contraseña debe contener:</p>
                 <ul className="mt-1.5 ml-4 list-disc text-xs text-gray-600 space-y-0.5">
                   <li>Mínimo 6 caracteres</li>
                   <li>Al menos 1 mayúscula</li>
@@ -57,28 +56,21 @@ const Register = () => {
           } max-w-md w-full bg-red-50 shadow-lg rounded-lg pointer-events-auto flex border border-red-200`}
         >
           <div className="flex-1 w-0 p-4">
-            <p className="text-sm font-medium text-black">
-              Las contraseñas no coinciden ❌
-            </p>
+            <p className="text-sm font-medium text-black">Las contraseñas no coinciden ❌</p>
           </div>
         </div>
       ));
       return;
     }
 
-    const { password2, ...cleanData } = form;
-
     try {
-      const request = await fetch(
-        "https://backend-inmobiliaria-argenta.vercel.app/auth/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(cleanData),
+      const request = await fetch("https://backend-inmobiliaria-argenta.vercel.app/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify(cleanData),
+      });
       const data = await request.json();
 
       if (data.ok == true) {
@@ -113,7 +105,7 @@ const Register = () => {
           </div>
         ));
       }
-    } catch (error) {
+    } catch {
       setLoading(false);
       toast.custom((t) => (
         <div
@@ -122,9 +114,7 @@ const Register = () => {
           } max-w-md w-full bg-red-50 shadow-lg rounded-lg pointer-events-auto flex border border-red-200`}
         >
           <div className="flex-1 w-0 p-4">
-            <p className="text-sm font-medium text-black">
-              Error al crear la cuenta ❌
-            </p>
+            <p className="text-sm font-medium text-black">Error al crear la cuenta ❌</p>
           </div>
         </div>
       ));
@@ -149,8 +139,8 @@ const Register = () => {
             inmobiliaria más grande.
           </h2>
           <p className="text-lg text-white/80 max-w-md">
-            Creá tu cuenta hoy y empezá a publicar o buscar tu próximo hogar con
-            herramientas exclusivas para usuarios registrados.
+            Creá tu cuenta hoy y empezá a publicar o buscar tu próximo hogar con herramientas exclusivas para usuarios
+            registrados.
           </p>
         </div>
       </div>
@@ -164,12 +154,8 @@ const Register = () => {
 
         <div className="w-full max-w-md space-y-8">
           <div className="text-left">
-            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-              Crear cuenta
-            </h1>
-            <p className="text-slate-500 mt-2">
-              Completá tus datos para empezar tu experiencia.
-            </p>
+            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Crear cuenta</h1>
+            <p className="text-slate-500 mt-2">Completá tus datos para empezar tu experiencia.</p>
           </div>
 
           <form id="auth-form" onSubmit={handleSubmit} className="space-y-4">
@@ -205,9 +191,7 @@ const Register = () => {
                   type="password"
                   className="h-12 bg-slate-300! border-slate-200 focus:ring-2 focus:ring-blue-500 transition-all"
                   required
-                  onChange={(e) =>
-                    setForm({ ...form, password: e.target.value })
-                  }
+                  onChange={(e) => setForm({ ...form, password: e.target.value })}
                 />
               </div>
               <div className="space-y-2">
@@ -217,9 +201,7 @@ const Register = () => {
                   type="password"
                   className="h-12 bg-slate-300! border-slate-200 focus:ring-2 focus:ring-blue-500 transition-all"
                   required
-                  onChange={(e) =>
-                    setForm({ ...form, password2: e.target.value })
-                  }
+                  onChange={(e) => setForm({ ...form, password2: e.target.value })}
                 />
               </div>
             </div>

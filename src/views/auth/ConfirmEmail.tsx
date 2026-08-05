@@ -1,23 +1,14 @@
-import { useEffect, useState } from "react";
+import api from "@/config/axios";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const ConfirmEmail = () => {
   const { token } = useParams();
 
   const navigate = useNavigate();
-
   const [loading, setLoading] = useState<boolean>(false);
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [mensaje, setMensaje] = useState<string>("");
-
-  useEffect(() => {
-    if (!token) {
-      setStatus("error");
-      setMensaje(
-        "El enlace de confirmación no es válido o le falta el token de seguridad.",
-      );
-    }
-  }, [token]);
 
   const manejarConfirmacion = async () => {
     if (!token) return;
@@ -26,32 +17,20 @@ const ConfirmEmail = () => {
     setStatus("idle");
 
     try {
-      const respuesta = await fetch(
-        `https://backend-inmobiliaria-argenta.vercel.app/auth/confirm-account`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ token }),
-        },
-      );
-
-      const data = await respuesta.json();
+      const url = "/confirm-account";
+      const { data } = await api.post(url, { body: JSON.stringify({ token }) });
 
       if (!data.ok) {
         throw new Error(data.msg || "Hubo un problema al confirmar tu cuenta.");
       }
 
       setStatus("success");
-      setMensaje(
-        "¡Tu cuenta ha sido verificada con éxito! Ya podés iniciar sesión.",
-      );
+      setMensaje("¡Tu cuenta ha sido verificada con éxito! Ya podés iniciar sesión.");
 
       setTimeout(() => {
         navigate("/");
       }, 3500);
-    } catch (error: any) {
+    } catch (error) {
       setStatus("error");
       setMensaje(error.message || "Error de conexión con el servidor.");
     } finally {
@@ -64,9 +43,7 @@ const ConfirmEmail = () => {
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
         {/* Encabezado estético */}
         <div className="bg-blue-900 py-8 px-6 text-center">
-          <h1 className="text-white font-bold text-2xl tracking-tight">
-            Inmobiliaria Argenta
-          </h1>
+          <h1 className="text-white font-bold text-2xl tracking-tight">Inmobiliaria Argenta</h1>
           <p className="text-blue-200 text-sm mt-1">Verificación de perfil</p>
         </div>
 
@@ -74,12 +51,9 @@ const ConfirmEmail = () => {
         <div className="p-8 text-center">
           {status === "idle" && (
             <>
-              <h2 className="text-xl font-semibold text-slate-800 mb-3">
-                ¡Estás a un solo clic!
-              </h2>
+              <h2 className="text-xl font-semibold text-slate-800 mb-3">¡Estás a un solo clic!</h2>
               <p className="text-slate-600 text-sm mb-6 leading-relaxed">
-                Presioná el botón de abajo para activar tu cuenta de forma
-                segura y empezar a publicar tus propiedades.
+                Presioná el botón de abajo para activar tu cuenta de forma segura y empezar a publicar tus propiedades.
               </p>
 
               <button
@@ -90,19 +64,8 @@ const ConfirmEmail = () => {
                 {loading ? (
                   <>
                     {/* Spinner de Tailwind */}
-                    <svg
-                      className="animate-spin h-5 w-5 text-white"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      />
+                    <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path
                         className="opacity-75"
                         fill="currentColor"
@@ -129,20 +92,12 @@ const ConfirmEmail = () => {
                   stroke="currentColor"
                   strokeWidth="2"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M5 13l4 4L19 7"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h2 className="text-xl font-bold text-slate-900 mb-2">
-                ¡Todo listo!
-              </h2>
+              <h2 className="text-xl font-bold text-slate-900 mb-2">¡Todo listo!</h2>
               <p className="text-sm text-slate-600 mb-4">{mensaje}</p>
-              <p className="text-xs text-slate-400 animate-pulse">
-                Redirigiéndote al login...
-              </p>
+              <p className="text-xs text-slate-400 animate-pulse">Redirigiéndote al login...</p>
             </div>
           )}
 
@@ -157,16 +112,10 @@ const ConfirmEmail = () => {
                   stroke="currentColor"
                   strokeWidth="2"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </div>
-              <h2 className="text-xl font-bold text-slate-900 mb-2">
-                No se pudo verificar
-              </h2>
+              <h2 className="text-xl font-bold text-slate-900 mb-2">No se pudo verificar</h2>
               <p className="text-sm text-slate-600 mb-6">{mensaje}</p>
             </div>
           )}

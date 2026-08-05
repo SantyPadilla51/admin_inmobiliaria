@@ -24,7 +24,6 @@ interface ImageFile {
 const FormProp = () => {
   const [images, setImages] = useState<ImageFile[]>([]);
   const [loading, setLoading] = useState(false);
-
   const form = useForm<FormPropsData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -43,7 +42,10 @@ const FormProp = () => {
     },
   });
 
-  const { control, handleSubmit, setValue } = form;
+  const { control, handleSubmit, setValue, watch } = form;
+
+  const currentAmenities: string[] = watch("amenities") || [];
+  const currentDescripcion: string = watch("descripcion") || "";
 
   const formatCurrency = (value: string) => {
     const digits = value.replace(/\D/g, "");
