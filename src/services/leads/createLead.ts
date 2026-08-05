@@ -2,7 +2,6 @@ import api from "@/config/axios";
 import toast from "react-hot-toast";
 import { QueryClient } from "@tanstack/react-query";
 import type { Propiedad } from "@/interfaces/Propiedad";
-import type { Lead } from "@/interfaces/Lead";
 
 interface LeadForm {
   nombre: string;
@@ -16,7 +15,7 @@ interface LeadForm {
 export const createLead = async (
   e: React.FormEvent,
   queryClient: QueryClient,
-  nuevoLead: Lead,
+  nuevoLead: LeadForm,
   propiedades: Propiedad[],
   setCargando: (open: boolean) => void,
   setNuevoLead: (data: LeadForm) => void,
@@ -26,12 +25,12 @@ export const createLead = async (
 
   setCargando(true);
 
-  if (!nuevoLead.nombre || !nuevoLead.telefono || !nuevoLead.propiedad_id) {
+  if (!nuevoLead.nombre || !nuevoLead.telefono || !nuevoLead.propiedadId) {
     toast.error("Por favor, completá los campos obligatorios (*)");
     return;
   }
 
-  const propiedadElegida = propiedades.find((p) => p.id?.toString() === nuevoLead.propiedad_id);
+  const propiedadElegida = propiedades.find((p) => p.id?.toString() === nuevoLead.propiedadId);
 
   if (!propiedadElegida) {
     toast.error("La propiedad seleccionada no es válida");
