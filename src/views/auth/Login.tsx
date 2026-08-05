@@ -48,27 +48,23 @@ const Login = () => {
         navigate("/admin/propiedades");
         setLoading(false);
       }
-    } catch (error) {
+    } catch {
       setLoading(false);
 
-      if (error.response) {
-        toast.error(error.response.data.msg, {
-          style: {
-            background: "rgba(18, 18, 18, 0.85)",
-            color: "#f3f4f6",
-            backdropFilter: "blur(10px)",
-            border: "1px solid rgba(255, 77, 79, 0.3)",
-            borderRadius: "12px",
-            padding: "14px 20px",
-            boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.37)",
-            fontSize: "14px",
-            fontWeight: "500",
-          },
-          icon: "❌",
-        });
-      } else {
-        toast.error("Error de conexión u otro problema");
-      }
+      toast.error("Error al iniciar sesion", {
+        style: {
+          background: "rgba(18, 18, 18, 0.85)",
+          color: "#f3f4f6",
+          backdropFilter: "blur(10px)",
+          border: "1px solid rgba(255, 77, 79, 0.3)",
+          borderRadius: "12px",
+          padding: "14px 20px",
+          boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.37)",
+          fontSize: "14px",
+          fontWeight: "500",
+        },
+        icon: "❌",
+      });
     }
   };
 
