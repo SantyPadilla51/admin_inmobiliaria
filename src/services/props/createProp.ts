@@ -1,25 +1,41 @@
+import type { ImageFile } from "@/components/FormProp";
 import api from "@/config/axios";
 import toast from "react-hot-toast";
 
-export const createProp = async (data, images, setLoading) => {
+interface dataProp {
+  titulo: string;
+  tipo: string;
+  calle: string;
+  direccion: string;
+  barrio: string;
+  habitaciones: string;
+  wc: string;
+  cochera: string;
+  precio: string;
+  expensas: string;
+  amenities: string[];
+  descripcion: string;
+}
+
+export const createProp = async (dataProp: dataProp, images: ImageFile[], setLoading: (open: boolean) => void) => {
   try {
     setLoading(true);
     const formData = new FormData();
 
-    const precioLimpio = parseInt(data.precio.replace(/[^0-9]/g, ""), 10) || 0;
-    const expensasLimpias = parseInt(data.expensas.replace(/[^0-9]/g, ""), 10) || 0;
+    const precioLimpio = parseInt(dataProp.precio.replace(/[^0-9]/g, ""), 10) || 0;
+    const expensasLimpias = parseInt(dataProp.expensas.replace(/[^0-9]/g, ""), 10) || 0;
 
-    formData.append("titulo", data.titulo);
-    formData.append("barrio", data.barrio);
-    formData.append("habitaciones", data.habitaciones);
-    formData.append("wc", data.wc);
-    formData.append("descripcion", data.descripcion);
+    formData.append("titulo", dataProp.titulo);
+    formData.append("barrio", dataProp.barrio);
+    formData.append("habitaciones", dataProp.habitaciones);
+    formData.append("wc", dataProp.wc);
+    formData.append("descripcion", dataProp.descripcion);
     formData.append("operacion", "venta");
-    formData.append("calle", data.calle.trim());
-    formData.append("cochera", data.cochera);
-    formData.append("tipo", data.tipo);
-    formData.append("direccion", data.direccion);
-    formData.append("amenities", JSON.stringify(data.amenities));
+    formData.append("calle", dataProp.calle.trim());
+    formData.append("cochera", dataProp.cochera);
+    formData.append("tipo", dataProp.tipo);
+    formData.append("direccion", dataProp.direccion);
+    formData.append("amenities", JSON.stringify(dataProp.amenities));
     formData.append("precio", precioLimpio.toString());
     formData.append("expensas", expensasLimpias.toString());
 
@@ -34,7 +50,7 @@ export const createProp = async (data, images, setLoading) => {
     });
 
     if (res.data?.ok === true) {
-      toast.success(data.msg, {
+      toast.success(res.data.msg, {
         duration: 4000,
         icon: "✅",
         position: "bottom-right",

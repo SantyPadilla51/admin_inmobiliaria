@@ -9,21 +9,8 @@ import { ejecutarActualizacionPropiedad } from "@/services/props/updateProp";
 import { ejecutarEliminacionPropiedad } from "@/services/props/deleteProp";
 import { Edit3, Trash2 } from "lucide-react";
 import type { EditPropProps, Propiedad } from "../interfaces/Propiedad";
-import {
-  Field,
-  FieldGroup,
-  FieldLabel,
-  FieldLegend,
-  FieldSet,
-} from "../components/ui/field";
-import {
-  Select,
-  SelectContent,
-  SelectTrigger,
-  SelectValue,
-  SelectGroup,
-  SelectItem,
-} from "../components/ui/select";
+import { Field, FieldGroup, FieldLabel, FieldLegend, FieldSet } from "../components/ui/field";
+import { Select, SelectContent, SelectTrigger, SelectValue, SelectGroup, SelectItem } from "../components/ui/select";
 import {
   AMENITIES_LIST,
   BARRIOS,
@@ -40,7 +27,7 @@ const EditProp = ({ prop }: EditPropProps) => {
   const [deleting, setDeleting] = useState(false);
   const [toastDeleteProp, setToastDeleteProp] = useState(false);
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
 
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -71,9 +58,7 @@ const EditProp = ({ prop }: EditPropProps) => {
     const files = e.target.files;
     if (!files) return;
 
-    const nuevasImagenesLocales = Array.from(files).map((file) =>
-      URL.createObjectURL(file),
-    );
+    const nuevasImagenesLocales = Array.from(files).map((file) => URL.createObjectURL(file));
 
     setFormData((prev) => ({
       ...prev,
@@ -99,13 +84,7 @@ const EditProp = ({ prop }: EditPropProps) => {
           <div className="w-full max-w-sm overflow-hidden bg-white rounded-xl shadow-2xl dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 p-6 scale-up-animation">
             <div className="text-center">
               <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-950/50 text-red-600 dark:text-red-400 mb-4">
-                <svg
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                >
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -114,12 +93,9 @@ const EditProp = ({ prop }: EditPropProps) => {
                 </svg>
               </div>
 
-              <h3 className="text-lg font-semibold text-gray-950 dark:text-white">
-                ¿Eliminar Propiedad?
-              </h3>
+              <h3 className="text-lg font-semibold text-gray-950 dark:text-white">¿Eliminar Propiedad?</h3>
               <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                Esta acción no se puede deshacer. El elemento se borrará
-                permanentemente.
+                Esta acción no se puede deshacer. El elemento se borrará permanentemente.
               </p>
             </div>
 
@@ -151,9 +127,7 @@ const EditProp = ({ prop }: EditPropProps) => {
             <span className="h-3 w-3 rounded-md bg-blue-600"></span>
             Editar una Propiedad
           </h1>
-          <p className="text-sm text-slate-500 mt-1 ml-5">
-            Edita los campos para editar la publicación en el sistema.
-          </p>
+          <p className="text-sm text-slate-500 mt-1 ml-5">Edita los campos para editar la publicación en el sistema.</p>
         </div>
 
         {/* Contenedor Derecho: Botón de Volver */}
@@ -161,18 +135,8 @@ const EditProp = ({ prop }: EditPropProps) => {
           onClick={() => navigate(-1)} // 👈 Regresa a la página anterior de forma nativa
           className="flex hover:cursor-pointer items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 font-semibold text-sm px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm transition-all duration-200 active:scale-95 shrink-0 self-start sm:self-auto"
         >
-          <svg
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth="2.5"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M10 19l-7-7m0 0l7-7m-7 7h18"
-            />
+          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
           Volver
         </button>
@@ -185,9 +149,7 @@ const EditProp = ({ prop }: EditPropProps) => {
         <FieldGroup>
           <FieldSet>
             <FieldLegend className="mb-8 pb-2 border-b border-zinc-100 flex flex-col gap-1">
-              <span className="text-lg font-semibold text-zinc-900">
-                Información de la Propiedad
-              </span>
+              <span className="text-lg font-semibold text-zinc-900">Información de la Propiedad</span>
               <span className="text-sm font-normal text-zinc-500 lowercase first-letter:uppercase">
                 Detalles básicos y ubicación del inmueble
               </span>
@@ -196,9 +158,7 @@ const EditProp = ({ prop }: EditPropProps) => {
             <FieldGroup className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Field>
-                  <FieldLabel className="text-zinc-700 font-medium">
-                    Nombre de la Propiedad
-                  </FieldLabel>
+                  <FieldLabel className="text-zinc-700 font-medium">Nombre de la Propiedad</FieldLabel>
                   <Input
                     className="border-zinc-200 focus:border-zinc-900 focus:ring-zinc-900/5 transition-all"
                     id="titulo"
@@ -210,19 +170,12 @@ const EditProp = ({ prop }: EditPropProps) => {
                 </Field>
 
                 <Field>
-                  <FieldLabel className="text-zinc-700 font-medium">
-                    Tipo de Propiedad
-                  </FieldLabel>
+                  <FieldLabel className="text-zinc-700 font-medium">Tipo de Propiedad</FieldLabel>
                   <Select
                     value={formData.tipo}
-                    onValueChange={(value) =>
-                      handleChange({ target: { name: "tipo", value } })
-                    }
+                    onValueChange={(value) => handleChange({ target: { name: "tipo", value } })}
                   >
-                    <SelectTrigger
-                      className="border-zinc-200 bg-white"
-                      id="tipo"
-                    >
+                    <SelectTrigger className="border-zinc-200 bg-white" id="tipo">
                       <SelectValue placeholder="Selecciona el tipo" />
                     </SelectTrigger>
                     <SelectContent>
@@ -240,9 +193,7 @@ const EditProp = ({ prop }: EditPropProps) => {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Field>
-                  <FieldLabel className="text-zinc-700 font-medium">
-                    Calle
-                  </FieldLabel>
+                  <FieldLabel className="text-zinc-700 font-medium">Calle</FieldLabel>
                   <Input
                     className="border-zinc-200"
                     id="calle"
@@ -253,9 +204,7 @@ const EditProp = ({ prop }: EditPropProps) => {
                   />
                 </Field>
                 <Field>
-                  <FieldLabel className="text-zinc-700 font-medium">
-                    Dirección
-                  </FieldLabel>
+                  <FieldLabel className="text-zinc-700 font-medium">Dirección</FieldLabel>
                   <Input
                     className="border-zinc-200"
                     id="direccion"
@@ -267,14 +216,10 @@ const EditProp = ({ prop }: EditPropProps) => {
                   />
                 </Field>
                 <Field>
-                  <FieldLabel className="text-zinc-700 font-medium ">
-                    Barrio
-                  </FieldLabel>
+                  <FieldLabel className="text-zinc-700 font-medium ">Barrio</FieldLabel>
                   <Select
                     value={formData.barrio}
-                    onValueChange={(value) =>
-                      handleChange({ target: { name: "barrio", value } })
-                    }
+                    onValueChange={(value) => handleChange({ target: { name: "barrio", value } })}
                   >
                     <SelectTrigger className="border-zinc-200 bg-white">
                       <SelectValue placeholder="Seleccionar" />
@@ -292,14 +237,10 @@ const EditProp = ({ prop }: EditPropProps) => {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Field>
-                  <FieldLabel className="text-zinc-700 font-medium">
-                    Habitaciones
-                  </FieldLabel>
+                  <FieldLabel className="text-zinc-700 font-medium">Habitaciones</FieldLabel>
                   <Select
                     value={formData.habitaciones}
-                    onValueChange={(value) =>
-                      handleChange({ target: { name: "habitaciones", value } })
-                    }
+                    onValueChange={(value) => handleChange({ target: { name: "habitaciones", value } })}
                   >
                     <SelectTrigger className="border-zinc-200 bg-white">
                       <SelectValue placeholder="Cantidad de habitaciones" />
@@ -315,14 +256,10 @@ const EditProp = ({ prop }: EditPropProps) => {
                 </Field>
 
                 <Field>
-                  <FieldLabel className="text-zinc-700 font-medium">
-                    Baños
-                  </FieldLabel>
+                  <FieldLabel className="text-zinc-700 font-medium">Baños</FieldLabel>
                   <Select
                     value={formData.wc}
-                    onValueChange={(value) =>
-                      handleChange({ target: { name: "wc", value } })
-                    }
+                    onValueChange={(value) => handleChange({ target: { name: "wc", value } })}
                   >
                     <SelectTrigger className="border-zinc-200 bg-white">
                       <SelectValue placeholder="Cantidad de baños" />
@@ -338,14 +275,10 @@ const EditProp = ({ prop }: EditPropProps) => {
                 </Field>
 
                 <Field>
-                  <FieldLabel className="text-zinc-700 font-medium">
-                    Cochera
-                  </FieldLabel>
+                  <FieldLabel className="text-zinc-700 font-medium">Cochera</FieldLabel>
                   <Select
                     value={formData.cochera}
-                    onValueChange={(value) =>
-                      handleChange({ target: { name: "cochera", value } })
-                    }
+                    onValueChange={(value) => handleChange({ target: { name: "cochera", value } })}
                   >
                     <SelectTrigger className="border-zinc-200 bg-white">
                       <SelectValue placeholder="Cuenta con cochera?" />
@@ -360,9 +293,7 @@ const EditProp = ({ prop }: EditPropProps) => {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Field>
-                  <FieldLabel className="text-zinc-700 font-medium">
-                    Precio
-                  </FieldLabel>
+                  <FieldLabel className="text-zinc-700 font-medium">Precio</FieldLabel>
                   <Input
                     className="border-zinc-200 font-semibold text-zinc-900"
                     placeholder="$ 0"
@@ -379,9 +310,7 @@ const EditProp = ({ prop }: EditPropProps) => {
                 </Field>
 
                 <Field>
-                  <FieldLabel className="text-zinc-700 font-medium">
-                    Expensas
-                  </FieldLabel>
+                  <FieldLabel className="text-zinc-700 font-medium">Expensas</FieldLabel>
                   <Input
                     className="border-zinc-200 font-semibold text-zinc-900"
                     placeholder="$ 0"
@@ -398,14 +327,10 @@ const EditProp = ({ prop }: EditPropProps) => {
                 </Field>
 
                 <Field>
-                  <FieldLabel className="text-zinc-700 font-medium">
-                    Tipo de Operacion
-                  </FieldLabel>
+                  <FieldLabel className="text-zinc-700 font-medium">Tipo de Operacion</FieldLabel>
                   <Select
                     value={formData.operacion}
-                    onValueChange={(value) =>
-                      handleChange({ target: { name: "operacion", value } })
-                    }
+                    onValueChange={(value) => handleChange({ target: { name: "operacion", value } })}
                   >
                     <SelectTrigger className="border-zinc-200 bg-white">
                       <SelectValue placeholder="Venta o Alquiler" />
@@ -424,9 +349,7 @@ const EditProp = ({ prop }: EditPropProps) => {
           </FieldSet>
 
           <Field>
-            <FieldLabel className="text-zinc-900 font-semibold mb-4 block">
-              Amenities Disponibles
-            </FieldLabel>
+            <FieldLabel className="text-zinc-900 font-semibold mb-4 block">Amenities Disponibles</FieldLabel>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-5 border border-zinc-200 rounded-lg bg-zinc-50/50">
               {AMENITIES_LIST.map((amenity) => (
                 <div key={amenity.value} className="flex items-center gap-3">
@@ -458,9 +381,7 @@ const EditProp = ({ prop }: EditPropProps) => {
           </Field>
 
           <Field className="mt-8">
-            <FieldLabel className="text-zinc-700 font-medium">
-              Descripción Detallada
-            </FieldLabel>
+            <FieldLabel className="text-zinc-700 font-medium">Descripción Detallada</FieldLabel>
             <Textarea
               className="min-h-30 border-zinc-200 focus:ring-zinc-900/5 resize-none"
               placeholder="Describe las características principales..."
@@ -471,15 +392,10 @@ const EditProp = ({ prop }: EditPropProps) => {
           </Field>
 
           <Field className="mt-8">
-            <FieldLabel className="text-zinc-700 font-medium mb-2">
-              Galería de Fotos
-            </FieldLabel>
+            <FieldLabel className="text-zinc-700 font-medium mb-2">Galería de Fotos</FieldLabel>
             <div className="flex flex-wrap gap-3">
               {formData.imagenes.map((img, index) => (
-                <div
-                  key={index}
-                  className="group relative h-40 w-auto overflow-hidden rounded-lg "
-                >
+                <div key={index} className="group relative h-40 w-auto overflow-hidden rounded-lg ">
                   {/* Imagen con transición suave */}
                   <img
                     className="h-50 w-60 aspect-video transition-transform duration-300 ease-in-out group-hover:scale-105"
@@ -513,25 +429,12 @@ const EditProp = ({ prop }: EditPropProps) => {
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M12 4v16m8-8H4"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
                 </svg>
-                <p className="text-sm text-zinc-600 font-medium">
-                  Añadir imágenes
-                </p>
+                <p className="text-sm text-zinc-600 font-medium">Añadir imágenes</p>
                 <p className="text-xs text-zinc-400">PNG, JPG hasta 10MB</p>
               </div>
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                className="hidden"
-                onChange={handleImageChange}
-              />
+              <input type="file" multiple accept="image/*" className="hidden" onChange={handleImageChange} />
             </label>
           </Field>
 

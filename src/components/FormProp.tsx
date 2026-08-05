@@ -16,7 +16,7 @@ import { Toaster } from "react-hot-toast";
 
 type FormPropsData = z.infer<typeof formSchema>;
 
-interface ImageFile {
+export interface ImageFile {
   file: File;
   preview: string;
 }

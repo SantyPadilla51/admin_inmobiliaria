@@ -18,7 +18,7 @@ export const createVisita = async (
   queryClient: QueryClient,
   nuevaVisita: NuevaVisitaState,
   setCargando: (open: boolean) => void,
-  setNuevaVisita: (data) => void,
+  setNuevaVisita: (data: NuevaVisitaState) => void,
   setModalNuevoVisitaOpen: (open: boolean) => void,
 ) => {
   e.preventDefault();
@@ -47,9 +47,7 @@ export const createVisita = async (
       return;
     }
 
-    const fechaHoraCombinada = new Date(
-      `${nuevaVisita.fecha}T${nuevaVisita.hora}:00`,
-    ).toISOString();
+    const fechaHoraCombinada = new Date(`${nuevaVisita.fecha}T${nuevaVisita.hora}:00`).toISOString();
 
     const payload = {
       nombre: nuevaVisita.nombre,
