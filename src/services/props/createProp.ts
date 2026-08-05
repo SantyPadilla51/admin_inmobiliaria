@@ -48,7 +48,7 @@ export const createProp = async (data, images, setLoading) => {
       // navigate("/admin/dashboard");
     }
   } catch {
-    toast.error("Error al editar el contacto", {
+    toast.error("Error al crear propiedad", {
       duration: 4000,
       icon: "❌",
       position: "bottom-right",

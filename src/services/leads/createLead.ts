@@ -1,28 +1,37 @@
 import api from "@/config/axios";
 import toast from "react-hot-toast";
 import { QueryClient } from "@tanstack/react-query";
+import type { Propiedad } from "@/interfaces/Propiedad";
+import type { Lead } from "@/interfaces/Lead";
+
+interface LeadForm {
+  nombre: string;
+  email: string;
+  telefono: string;
+  mensaje: string;
+  fuente: string;
+  propiedadId: string;
+}
 
 export const createLead = async (
   e: React.FormEvent,
   queryClient: QueryClient,
-  nuevoLead: any,
-  propiedades: any[],
-  setCargando: any,
-  setNuevoLead: (data: any) => void,
+  nuevoLead: Lead,
+  propiedades: Propiedad[],
+  setCargando: (open: boolean) => void,
+  setNuevoLead: (data: LeadForm) => void,
   setModalNuevoOpen: (open: boolean) => void,
 ) => {
   e.preventDefault();
 
   setCargando(true);
 
-  if (!nuevoLead.nombre || !nuevoLead.telefono || !nuevoLead.propiedadId) {
+  if (!nuevoLead.nombre || !nuevoLead.telefono || !nuevoLead.propiedad_id) {
     toast.error("Por favor, completá los campos obligatorios (*)");
     return;
   }
 
-  const propiedadElegida = propiedades.find(
-    (p) => p.id?.toString() === nuevoLead.propiedadId,
-  );
+  const propiedadElegida = propiedades.find((p) => p.id?.toString() === nuevoLead.propiedad_id);
 
   if (!propiedadElegida) {
     toast.error("La propiedad seleccionada no es válida");
@@ -31,22 +40,46 @@ export const createLead = async (
 
   try {
     const url = "/consultas";
-    const data = await api.post(url, nuevoLead);
+    const { data } = await api.post(url, nuevoLead);
 
-    queryClient.invalidateQueries({ queryKey: ["admin_leads"] });
+    if (data.ok === true) {
+      queryClient.invalidateQueries({ queryKey: ["admin_leads"] });
 
-    setModalNuevoOpen(false);
+      setModalNuevoOpen(false);
 
-    setNuevoLead({
-      nombre: "",
-      email: "",
-      telefono: "",
-      mensaje: "",
-      fuente: "",
-      propiedadId: "",
+      toast.success(data.msg, {
+        duration: 4000,
+        icon: "✅",
+        position: "bottom-right",
+        style: {
+          border: "2px solid #22c55e",
+          color: "#14532d",
+          backgroundColor: "#f0fdf4",
+          borderRadius: "20px",
+        },
+      });
+
+      setNuevoLead({
+        nombre: "",
+        email: "",
+        telefono: "",
+        mensaje: "",
+        fuente: "",
+        propiedadId: "",
+      });
+    }
+  } catch {
+    toast.error("Error al crear lead", {
+      duration: 4000,
+      icon: "❌",
+      position: "bottom-right",
+      style: {
+        border: "2px solid #ef4444",
+        color: "#7f1d1d",
+        backgroundColor: "#fef2f2",
+        borderRadius: "20px",
+      },
     });
-  } catch (error) {
-    toast.error("Error al registrar la consulta");
   } finally {
     setCargando(false);
   }

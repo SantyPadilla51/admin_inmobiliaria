@@ -271,29 +271,6 @@ const Clientes = () => {
                             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
                               Propiedades en catálogo
                             </span>
-                            {clienteSeleccionado.propiedades && clienteSeleccionado.propiedades.length > 0 ? (
-                              <div className="space-y-2 max-h-40 overflow-y-auto pr-1">
-                                {clienteSeleccionado.propiedades.map((prop) => (
-                                  <div
-                                    key={prop.id}
-                                    className="p-3 border border-slate-200 rounded-xl bg-white flex justify-between items-center shadow-xs"
-                                  >
-                                    <div className="truncate pr-2">
-                                      <span className="text-sm font-bold text-slate-800 block truncate">
-                                        {prop.titulo}
-                                      </span>
-                                      <span className="text-[10px] font-semibold uppercase text-slate-400 tracking-wider">
-                                        Operación: {prop.tipoOperacion}
-                                      </span>
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            ) : (
-                              <p className="text-xs text-slate-400 bg-slate-50 p-4 rounded-xl border border-dashed border-slate-200 italic">
-                                Este propietario no tiene propiedades asignadas actualmente.
-                              </p>
-                            )}
                           </div>
                         ) : (
                           <div className="space-y-2">

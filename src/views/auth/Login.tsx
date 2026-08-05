@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { toast, Toaster } from "react-hot-toast";
@@ -18,6 +18,7 @@ const loginSchema = z.object({
 type FormPropsData = z.infer<typeof loginSchema>;
 
 const Login = () => {
+  const navigate = useNavigate();
   const [mostrarPassword, setMostrarPassword] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
 
@@ -29,10 +30,7 @@ const Login = () => {
     },
   });
 
-  const { control, handleSubmit, watch } = form;
-
-  const currentAmenities = watch("email");
-  const currentTipo = watch("password");
+  const { control, handleSubmit } = form;
 
   const onSubmitForm = async (datos: FormPropsData) => {
     try {
@@ -47,10 +45,10 @@ const Login = () => {
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
 
-        window.location.href = "/admin/propiedades";
+        navigate("/admin/propiedades");
         setLoading(false);
       }
-    } catch (error: any) {
+    } catch (error) {
       setLoading(false);
 
       if (error.response) {
@@ -92,8 +90,8 @@ const Login = () => {
             Inmobiliaria Argenta.
           </h2>
           <p className="text-lg text-white/80 max-w-md">
-            Gestioná el catálogo de propiedades, administrá clientes y supervisá
-            las operaciones de Buenos Aires desde un solo lugar.
+            Gestioná el catálogo de propiedades, administrá clientes y supervisá las operaciones de Buenos Aires desde
+            un solo lugar.
           </p>
         </div>
       </div>
@@ -107,12 +105,8 @@ const Login = () => {
 
         <div className="w-full max-w-md space-y-8">
           <div className="text-left">
-            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-              Bienvenido de nuevo
-            </h1>
-            <p className="text-slate-500 mt-2">
-              Ingresá tus datos para gestionar tu cuenta.
-            </p>
+            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Bienvenido de nuevo</h1>
+            <p className="text-slate-500 mt-2">Ingresá tus datos para gestionar tu cuenta.</p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-6">
@@ -129,9 +123,7 @@ const Login = () => {
                       aria-invalid={fieldState.invalid}
                       className="bg-white!  py-5"
                     />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                   </Field>
                 )}
               />
@@ -183,11 +175,7 @@ const Login = () => {
                               stroke="currentColor"
                               strokeWidth="2"
                             >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                              />
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                               <path
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -198,19 +186,14 @@ const Login = () => {
                         </button>
                       </div>
 
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
+                      {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                     </Field>
                   )}
                 />
               </div>
 
               <div className="flex items-center justify-between">
-                <a
-                  href="#"
-                  className="text-xs font-medium text-blue-600 hover:text-blue-700 transition-colors"
-                >
+                <a href="#" className="text-xs font-medium text-blue-600 hover:text-blue-700 transition-colors">
                   ¿Olvidaste tu contraseña?
                 </a>
               </div>
