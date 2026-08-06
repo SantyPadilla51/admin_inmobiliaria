@@ -10,6 +10,7 @@ export interface NuevaVisitaState {
   fecha: string;
   hora: string;
   propiedadId: string;
+  estado?: string;
   notas?: string;
 }
 
@@ -83,6 +84,7 @@ export const createVisita = async (
         fecha: new Date().toISOString().split("T")[0],
         hora: "10:00",
         propiedadId: "",
+        estado: "a_confirmar",
         notas: "",
       });
 
