@@ -1,7 +1,7 @@
 import Navbar from "@/components/Navbar";
 import { SideBar } from "@/components/SideBar";
 import { formatCurrencyAR } from "@/helpers/formatCurrency";
-import { createVisita } from "@/services/visitas/createVisita";
+import { createVisita, type NuevaVisitaState } from "@/services/visitas/createVisita";
 import { getPropiedades } from "@/services/props/getProps";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Calendar, Clock, Loader2, Plus, Trash2 } from "lucide-react";
@@ -28,7 +28,7 @@ registerLocale("es", es);
 const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
   const queryClient = useQueryClient();
   const [cargando, setCargando] = useState(false);
-  const [nuevaVisita, setNuevaVisita] = useState({
+  const [nuevaVisita, setNuevaVisita] = useState<NuevaVisitaState>({
     nombre: "",
     telefono: "",
     email: "",
@@ -40,22 +40,16 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
   });
   const [itemAEliminar, setItemAEliminar] = useState<string | null>(null);
   const [modalNuevoVisitaOpen, setModalNuevoVisitaOpen] = useState(false);
-  const [filtroTiempo, setFiltroTiempo] = useState<"todos" | "hoy" | "semana">(
-    "todos",
-  );
+  const [filtroTiempo, setFiltroTiempo] = useState<"todos" | "hoy" | "semana">("todos");
   const [filtroEstado, setFiltroEstado] = useState<string>("todos");
-  const [visitaSeleccionada, setVisitaSeleccionada] = useState<Visita | null>(
-    null,
-  );
+  const [visitaSeleccionada, setVisitaSeleccionada] = useState<Visita | null>(null);
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
 
-  const { data: visitas = [], isLoading: cargandoVisitas } = useQuery<Visita[]>(
-    {
-      queryKey: ["admin_visitas"],
-      queryFn: () => getVisitas(),
-      initialData: initialVisitas,
-    },
-  );
+  const { data: visitas = [], isLoading: cargandoVisitas } = useQuery<Visita[]>({
+    queryKey: ["admin_visitas"],
+    queryFn: () => getVisitas(),
+    initialData: initialVisitas,
+  });
 
   const { data: propiedades = [] } = useQuery({
     queryKey: ["admin_propiedades"],
@@ -69,9 +63,7 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
     return new Date(year, month - 1, day);
   };
 
-  const handleActualizarEstado = async (
-    nuevoEstado: "pendiente" | "confirmada" | "realizada" | "cancelada",
-  ) => {
+  const handleActualizarEstado = async (nuevoEstado: "pendiente" | "confirmada" | "realizada" | "cancelada") => {
     setVisitaSeleccionada((prev) => {
       if (!prev) return null;
       return {
@@ -147,15 +139,9 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
     }
   };
 
-  const visitasHoyCount = visitas.filter(
-    (v) => esHoy(v.fecha) && v.estado !== "cancelada",
-  ).length;
-  const pendientesCount = visitas.filter(
-    (v) => v.estado === "pendiente",
-  ).length;
-  const canceladasCount = visitas.filter(
-    (v) => v.estado === "cancelada",
-  ).length;
+  const visitasHoyCount = visitas.filter((v) => esHoy(v.fecha) && v.estado !== "cancelada").length;
+  const pendientesCount = visitas.filter((v) => v.estado === "pendiente").length;
+  const canceladasCount = visitas.filter((v) => v.estado === "cancelada").length;
 
   const visitasFiltradas = visitas
     .filter((v) => {
@@ -197,12 +183,9 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
                 {/* ENCABEZADO */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
                   <div>
-                    <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
-                      Agenda de Visitas
-                    </h1>
+                    <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Agenda de Visitas</h1>
                     <p className="text-sm text-slate-500 mt-1">
-                      Coordiná los turnos de exhibición de propiedades y
-                      asignación de asesores comerciales.
+                      Coordiná los turnos de exhibición de propiedades y asignación de asesores comerciales.
                     </p>
                   </div>
                   <button
@@ -217,28 +200,16 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
                 {/* TARJETAS DE MÉTRICAS */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
                   <div className="bg-blue-50/60 p-5 rounded-2xl border border-blue-100 flex flex-col justify-between">
-                    <span className="text-sm font-medium text-blue-700">
-                      Visitas para Hoy
-                    </span>
-                    <span className="text-3xl font-bold text-blue-800 mt-2">
-                      {visitasHoyCount}
-                    </span>
+                    <span className="text-sm font-medium text-blue-700">Visitas para Hoy</span>
+                    <span className="text-3xl font-bold text-blue-800 mt-2">{visitasHoyCount}</span>
                   </div>
                   <div className="bg-amber-50/60 p-5 rounded-2xl border border-amber-100 flex flex-col justify-between">
-                    <span className="text-sm font-medium text-amber-700">
-                      Por Confirmar
-                    </span>
-                    <span className="text-3xl font-bold text-amber-800 mt-2">
-                      {pendientesCount}
-                    </span>
+                    <span className="text-sm font-medium text-amber-700">Por Confirmar</span>
+                    <span className="text-3xl font-bold text-amber-800 mt-2">{pendientesCount}</span>
                   </div>
                   <div className="bg-red-50/60 p-5 rounded-2xl border border-red-100 flex flex-col justify-between">
-                    <span className="text-sm font-medium text-red-700">
-                      Canceladas
-                    </span>
-                    <span className="text-3xl font-bold text-red-800 mt-2">
-                      {canceladasCount}
-                    </span>
+                    <span className="text-sm font-medium text-red-700">Canceladas</span>
+                    <span className="text-3xl font-bold text-red-800 mt-2">{canceladasCount}</span>
                   </div>
                 </div>
 
@@ -256,11 +227,7 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
                             : "text-slate-500 hover:text-slate-800"
                         }`}
                       >
-                        {tiempo === "todos"
-                          ? "Todas"
-                          : tiempo === "semana"
-                            ? "Esta Semana"
-                            : "Hoy"}
+                        {tiempo === "todos" ? "Todas" : tiempo === "semana" ? "Esta Semana" : "Hoy"}
                       </button>
                     ))}
                   </div>
@@ -272,9 +239,7 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
                     className="text-xs bg-white border border-slate-200 rounded-xl p-2.5 font-semibold text-slate-700 focus:ring-2 focus:ring-blue-500 focus:outline-none cursor-pointer w-full sm:w-auto"
                   >
                     <option value="todos">Todos los estados</option>
-                    <option value="pendiente">
-                      Pendientes de confirmacion
-                    </option>
+                    <option value="pendiente">Pendientes de confirmacion</option>
                     <option value="confirmada">Confirmadas</option>
                     <option value="realizada">Realizadas</option>
                     <option value="cancelada">Canceladas</option>
@@ -307,20 +272,14 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
                         >
                           {/* Bloque Horario */}
                           <div className="flex md:flex-col items-baseline md:items-start gap-2 md:gap-0 min-w-30px">
-                            <span className="text-xl font-black text-blue-600 tracking-tight">
-                              {hora}
-                            </span>
-                            <span className="text-xs font-semibold text-slate-400 capitalize">
-                              {fechaTexto}
-                            </span>
+                            <span className="text-xl font-black text-blue-600 tracking-tight">{hora}</span>
+                            <span className="text-xs font-semibold text-slate-400 capitalize">{fechaTexto}</span>
                           </div>
 
                           {/* Información Central */}
                           <div className="flex-1 space-y-1">
                             <div className="flex items-center gap-2 flex-wrap">
-                              <h3 className="font-bold text-slate-900 text-base">
-                                {visita.nombre}
-                              </h3>
+                              <h3 className="font-bold text-slate-900 text-base">{visita.nombre}</h3>
                               <span
                                 className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
                                   visita.estado === "pendiente"
@@ -332,12 +291,7 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
                                         : "bg-red-50 text-red-700 border-red-200"
                                 }`}
                               >
-                                {visita.estado
-                                  .replace(
-                                    "pendiente",
-                                    "pendiente de confirmacion",
-                                  )
-                                  .replace("_", " ")}
+                                {visita.estado.replace("pendiente", "pendiente de confirmacion").replace("_", " ")}
                               </span>
                             </div>
                           </div>
@@ -361,14 +315,7 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
                   <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
                     <form
                       onSubmit={(e) =>
-                        createVisita(
-                          e,
-                          queryClient,
-                          nuevaVisita,
-                          setCargando,
-                          setNuevaVisita,
-                          setModalNuevoVisitaOpen,
-                        )
+                        createVisita(e, queryClient, nuevaVisita, setCargando, setNuevaVisita, setModalNuevoVisitaOpen)
                       }
                       className="bg-white rounded-2xl w-full max-w-4xl p-6 shadow-xl border border-slate-200 flex flex-col gap-4 animate-scale-up max-h-[90vh] overflow-y-auto"
                     >
@@ -376,9 +323,7 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
                       <div className="flex justify-between items-center border-b border-slate-100 pb-3">
                         <div className="flex items-center gap-2">
                           <Calendar className="text-blue-600 h-5 w-5" />
-                          <h3 className="text-lg font-bold text-slate-900">
-                            Agendar Nueva Visita
-                          </h3>
+                          <h3 className="text-lg font-bold text-slate-900">Agendar Nueva Visita</h3>
                         </div>
                         <button
                           type="button"
@@ -392,9 +337,7 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
                       <div className="space-y-4">
                         {/* Nombre del Cliente */}
                         <div className="flex flex-col gap-1">
-                          <label className="text-xs font-bold text-slate-500">
-                            Nombre del Interesado / Cliente *
-                          </label>
+                          <label className="text-xs font-bold text-slate-500">Nombre del Interesado / Cliente *</label>
                           <input
                             type="text"
                             required
@@ -413,9 +356,7 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
                         {/* Teléfono y Email */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <div className="flex flex-col gap-1">
-                            <label className="text-xs font-bold text-slate-500">
-                              Teléfono de Contacto *
-                            </label>
+                            <label className="text-xs font-bold text-slate-500">Teléfono de Contacto *</label>
                             <input
                               type="tel"
                               required
@@ -431,9 +372,7 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
                             />
                           </div>
                           <div className="flex flex-col gap-1">
-                            <label className="text-xs font-bold text-slate-500">
-                              Email (Opcional)
-                            </label>
+                            <label className="text-xs font-bold text-slate-500">Email (Opcional)</label>
                             <input
                               type="email"
                               placeholder="Ej: maria@mail.com"
@@ -463,13 +402,8 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
                                 onChange={(date: Date | null) => {
                                   if (date) {
                                     const year = date.getFullYear();
-                                    const month = String(
-                                      date.getMonth() + 1,
-                                    ).padStart(2, "0");
-                                    const day = String(date.getDate()).padStart(
-                                      2,
-                                      "0",
-                                    );
+                                    const month = String(date.getMonth() + 1).padStart(2, "0");
+                                    const day = String(date.getDate()).padStart(2, "0");
                                     const fechaFormatted = `${year}-${month}-${day}`;
 
                                     setNuevaVisita({
@@ -488,10 +422,7 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
                               />
 
                               {/* Ícono absoluto a la derecha del input */}
-                              <Calendar
-                                size={18}
-                                className="absolute right-3 text-slate-400 pointer-events-none"
-                              />
+                              <Calendar size={18} className="absolute right-3 text-slate-400 pointer-events-none" />
                             </div>
                           </div>
 
@@ -520,9 +451,7 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
                                 const hours = Math.floor(totalMinutes / 60)
                                   .toString()
                                   .padStart(2, "0");
-                                const minutes = (totalMinutes % 60)
-                                  .toString()
-                                  .padStart(2, "0");
+                                const minutes = (totalMinutes % 60).toString().padStart(2, "0");
                                 const timeString = `${hours}:${minutes}`;
 
                                 return (
@@ -537,9 +466,7 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
 
                         {/* Selector de Propiedad de Interés */}
                         <div className="flex flex-col gap-2">
-                          <label className="text-xs font-bold text-slate-500">
-                            Propiedad a Visitar *
-                          </label>
+                          <label className="text-xs font-bold text-slate-500">Propiedad a Visitar *</label>
 
                           <select
                             required
@@ -552,9 +479,7 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
                             }
                             className="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
                           >
-                            <option value="">
-                              -- Seleccionar Propiedad --
-                            </option>
+                            <option value="">-- Seleccionar Propiedad --</option>
                             {propiedades.map((prop) => (
                               <option key={prop.id} value={prop.id}>
                                 {`${prop.operacion?.toUpperCase()} - ${prop.titulo}`}
@@ -566,14 +491,12 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
                           {nuevaVisita.propiedadId &&
                             (() => {
                               const propSeleccionada = propiedades.find(
-                                (p) =>
-                                  p.id?.toString() === nuevaVisita.propiedadId,
+                                (p) => p.id?.toString() === nuevaVisita.propiedadId,
                               );
 
                               if (!propSeleccionada) return null;
 
-                              const primeraFoto =
-                                propSeleccionada.imagenes?.[0];
+                              const primeraFoto = propSeleccionada.imagenes?.[0];
 
                               return (
                                 <div className="mt-1 h-36 flex items-center gap-4 p-3 bg-slate-50/80 rounded-xl border border-slate-200 animate-fadeIn transition-all">
@@ -588,14 +511,11 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
                                   <div className="flex-1 min-w-0">
                                     <div className="flex items-baseline gap-2">
                                       <span className="text-sm font-bold text-slate-900">
-                                        {formatCurrencyAR(
-                                          propSeleccionada.precio,
-                                        )}
+                                        {formatCurrencyAR(propSeleccionada.precio)}
                                       </span>
                                       <span
                                         className={`text-[10px] px-1.5 py-0.5 rounded font-semibold tracking-wide uppercase ${
-                                          propSeleccionada.operacion ===
-                                          "alquiler"
+                                          propSeleccionada.operacion === "alquiler"
                                             ? "bg-purple-50 text-purple-700 border border-purple-200/60"
                                             : "bg-blue-50 text-blue-700 border border-blue-200/60"
                                         }`}
@@ -610,10 +530,7 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
 
                                     <p className="text-[11px] text-slate-500 truncate mt-0.5">
                                       {propSeleccionada.calle}{" "}
-                                      {propSeleccionada.direccion
-                                        ? `, ${propSeleccionada.direccion}`
-                                        : ""}{" "}
-                                      •{" "}
+                                      {propSeleccionada.direccion ? `, ${propSeleccionada.direccion}` : ""} •{" "}
                                       <span className="font-medium text-slate-600 capitalize">
                                         {propSeleccionada.barrio}
                                       </span>
@@ -626,9 +543,7 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
 
                         {/* Notas / Observaciones */}
                         <div className="flex flex-col gap-1">
-                          <label className="text-xs font-bold text-slate-500">
-                            Notas u Observaciones
-                          </label>
+                          <label className="text-xs font-bold text-slate-500">Notas u Observaciones</label>
                           <textarea
                             rows={2}
                             placeholder="Ej: Trae a la pareja. Pedir llave al encargado antes de las 15 hs..."
@@ -682,9 +597,7 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
                       {/* Cabecera */}
                       <div className="flex items-start justify-between border-b border-slate-100 pb-4">
                         <div>
-                          <h3 className="text-lg font-bold text-slate-900">
-                            Gestión de Turno
-                          </h3>
+                          <h3 className="text-lg font-bold text-slate-900">Gestión de Turno</h3>
                           <p className="text-xs text-slate-400 mt-0.5">
                             Ref Propiedad: #{visitaSeleccionada.propiedad_id}
                           </p>
@@ -700,11 +613,7 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
                             stroke="currentColor"
                             strokeWidth="2.5"
                           >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M6 18L18 6M6 6l12 12"
-                            />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                           </svg>
                         </button>
                       </div>
@@ -712,17 +621,10 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
                       {/* Fecha, Hora e Infraestructura */}
                       <div className="grid grid-cols-2 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200/60 text-xs">
                         <div>
-                          <span className="text-slate-400 block font-medium">
-                            Fecha y Hora
-                          </span>
+                          <span className="text-slate-400 block font-medium">Fecha y Hora</span>
                           <span className="text-sm font-bold text-slate-900">
-                            {new Date(
-                              visitaSeleccionada.fecha,
-                            ).toLocaleDateString("es-AR")}{" "}
-                            -{" "}
-                            {new Date(
-                              visitaSeleccionada.fecha,
-                            ).toLocaleTimeString("es-AR", {
+                            {new Date(visitaSeleccionada.fecha).toLocaleDateString("es-AR")} -{" "}
+                            {new Date(visitaSeleccionada.fecha).toLocaleTimeString("es-AR", {
                               hour: "2-digit",
                               minute: "2-digit",
                             })}{" "}
@@ -740,9 +642,7 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
                           if (!visitaSeleccionada.propiedad_id) return null;
 
                           const propSeleccionada = propiedades.find(
-                            (p) =>
-                              p.id?.toString() ===
-                              visitaSeleccionada.propiedad_id,
+                            (p) => p.id?.toString() === visitaSeleccionada.propiedad_id,
                           );
 
                           if (!propSeleccionada) return null;
@@ -783,10 +683,7 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
 
                                 <p className="text-[11px] text-slate-500 truncate mt-0.5">
                                   {propSeleccionada.calle}{" "}
-                                  {propSeleccionada.direccion
-                                    ? `, ${propSeleccionada.direccion}`
-                                    : ""}{" "}
-                                  •{" "}
+                                  {propSeleccionada.direccion ? `, ${propSeleccionada.direccion}` : ""} •{" "}
                                   <span className="font-medium text-slate-600 capitalize">
                                     {propSeleccionada.barrio}
                                   </span>
@@ -812,12 +709,8 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
                         </span>
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between text-sm gap-2">
                           <div>
-                            <p className="font-bold text-slate-900">
-                              {visitaSeleccionada.nombre}
-                            </p>
-                            <p className="text-xs text-slate-400">
-                              {visitaSeleccionada.email}
-                            </p>
+                            <p className="font-bold text-slate-900">{visitaSeleccionada.nombre}</p>
+                            <p className="text-xs text-slate-400">{visitaSeleccionada.email}</p>
                           </div>
                           <div className="flex gap-2">
                             <a
@@ -846,9 +739,7 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
 
                       {/* Acciones de Estado */}
                       <div className="border-t border-slate-100 pt-4 space-y-2">
-                        <span className="text-xs font-bold text-slate-400 block">
-                          Cambiar estado del turno:
-                        </span>
+                        <span className="text-xs font-bold text-slate-400 block">Cambiar estado del turno:</span>
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                           <button
                             onClick={() => handleActualizarEstado("pendiente")}
@@ -895,9 +786,7 @@ const Agenda = ({ initialVisitas = [] }: AgendaVisitasProps) => {
 
                       <div className="flex justify-between">
                         <Button
-                          onClick={() =>
-                            handleOpenDelete(visitaSeleccionada.id)
-                          }
+                          onClick={() => handleOpenDelete(visitaSeleccionada.id)}
                           className="text-xs bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 rounded-xl shadow-sm cursor-pointer active:scale-95 transition-all"
                         >
                           <div className="flex gap-3">
