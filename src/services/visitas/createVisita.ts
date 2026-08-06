@@ -1,6 +1,6 @@
 import api from "@/config/axios";
 import { QueryClient } from "@tanstack/react-query";
-import type { FormEvent } from "react";
+import type { Dispatch, SetStateAction, FormEvent } from "react";
 import toast from "react-hot-toast";
 
 export interface NuevaVisitaState {
@@ -18,7 +18,7 @@ export const createVisita = async (
   queryClient: QueryClient,
   nuevaVisita: NuevaVisitaState,
   setCargando: (open: boolean) => void,
-  setNuevaVisita: (data: NuevaVisitaState) => void,
+  setNuevaVisita: Dispatch<SetStateAction<NuevaVisitaState>>,
   setModalNuevoVisitaOpen: (open: boolean) => void,
 ) => {
   e.preventDefault();

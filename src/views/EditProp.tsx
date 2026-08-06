@@ -27,7 +27,7 @@ const EditProp = ({ prop }: EditPropProps) => {
   const [deleting, setDeleting] = useState(false);
   const [toastDeleteProp, setToastDeleteProp] = useState(false);
 
-  const handleChange = (e: any) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
 
     setFormData((prev) => ({ ...prev, [name]: value }));

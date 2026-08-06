@@ -30,9 +30,9 @@ const ConfirmEmail = () => {
       setTimeout(() => {
         navigate("/");
       }, 3500);
-    } catch (error) {
+    } catch {
       setStatus("error");
-      setMensaje(error.message || "Error de conexión con el servidor.");
+      setMensaje("Error de conexión con el servidor.");
     } finally {
       setLoading(false);
     }
